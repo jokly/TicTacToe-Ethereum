@@ -25,7 +25,7 @@ contract TicTacToe {
     }
     
     function TicTacToe(uint8 _PlayerSym) public {
-        require(uint(Symbol.X) <= _PlayerSym &&  _PlayerSym <= uint(Symbol.O));
+        require(uint(Symbol.X) <= _PlayerSym && _PlayerSym <= uint(Symbol.O));
         player1 = Player(msg.sender, Symbol(_PlayerSym));
         stroke = player1.symbol;
     }
@@ -45,8 +45,7 @@ contract TicTacToe {
         if (msg.sender == player1.addr && stroke == player1.symbol) {
             SetSymbol(i, j, player1.symbol);
             stroke = player2.symbol;
-        }
-        else if (msg.sender == player2.addr && stroke == player2.symbol) {
+        } else if (msg.sender == player2.addr && stroke == player2.symbol) {
             SetSymbol(i, j, player2.symbol);
             stroke = player1.symbol;
         }
@@ -65,36 +64,63 @@ contract TicTacToe {
     }
     
     function CheckWin() public {
-        if (field[0][0] != Symbol.Empty && field[0][0] == field[1][0] && field[1][0] == field[2][0]) {
+        uint size = field.length;
+        bool res = true;
+
+        for (uint i = 0; i < size; i++) {
+            res = true;    
+            for (uint j = 1; j < size; j++) {
+                if (field[i][j] != field[i][j - 1]) {
+                    res = false;
+                    break;
+                }
+            }
+
+            if (res && field[i][0] != Symbol.Empty) {
+                WasWin(field[i][0]);
+                isEnd = true;
+                return;
+            }
+
+            res = true;
+            for (j = 1; j < size; j++) {
+                if (field[i][j] != field[j - 1][i]) {
+                    res = false;
+                    break;
+                }
+            }
+
+            if (res && field[i][0] != Symbol.Empty) {
+                WasWin(field[i][0]);
+                isEnd = true;
+                return;
+            }
+        }
+
+        res = true;
+        for (j = 1; j < size; j++) {
+            if (field[j][j] != field[j - 1][j - 1]) {
+                res = false;
+                break;
+            }
+        }
+
+        if (res && field[0][0] != Symbol.Empty) {
             WasWin(field[0][0]);
             isEnd = true;
+            return;
         }
-        if (field[0][1] != Symbol.Empty && field[0][1] == field[1][1] && field[1][1] == field[2][1]) {
-            WasWin(field[0][1]);
-            isEnd = true;
+
+        res = true;
+        for (j = 1; j < size; j++) {
+            if (field[size - j - 1][j] != field[size - j][j - 1]) {
+                res = false;
+                break;
+            }
         }
-        if (field[0][2] != Symbol.Empty && field[0][2] == field[1][2] && field[1][2] == field[2][2]) {
-            WasWin(field[0][2]);
-            isEnd = true;
-        }
-        if (field[0][0] != Symbol.Empty && field[0][0] == field[0][1] && field[0][1] == field[0][2]) {
-            WasWin(field[0][0]);
-            isEnd = true;
-        }
-        if (field[1][0] != Symbol.Empty && field[1][0] == field[1][1] && field[1][1] == field[1][2]) {
-            WasWin(field[1][0]);
-            isEnd = true;
-        }
-        if (field[2][0] != Symbol.Empty && field[2][0] == field[2][1] && field[2][1] == field[2][2]) {
-            WasWin(field[2][0]);
-            isEnd = true;
-        }
-        if (field[0][0] != Symbol.Empty && field[0][0] == field[1][1] && field[1][1] == field[2][2]) {
-            WasWin(field[0][0]);
-            isEnd = true;
-        }
-        if (field[0][2] != Symbol.Empty && field[0][2] == field[1][1] && field[1][1] == field[2][0]) {
-            WasWin(field[0][2]);
+
+        if (res && field[size - 1][0] != Symbol.Empty) {
+            WasWin(field[size - 1][0]);
             isEnd = true;
         }
     }
