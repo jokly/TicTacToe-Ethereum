@@ -38,9 +38,7 @@ contract TicTacToe {
     }
     
     function MakeMove(uint8 i, uint8 j) public OnlyPlayers() {
-        if (isEnd) {
-            return;
-        }
+        if (isEnd) return;
             
         if (msg.sender == player1.addr && stroke == player1.symbol) {
             SetSymbol(i, j, player1.symbol);
@@ -74,25 +72,19 @@ contract TicTacToe {
                 }
             }
 
-            if (res && field[i][0] != Symbol.Empty) {
-                WasWin(field[i][0]);
-                isEnd = true;
-                return;
-            }
+            CheckResult(i, 0, res);
+            if (isEnd) return;
 
             res = true;
             for (j = 1; j < size; j++) {
-                if (field[i][j] != field[j - 1][i]) {
+                if (field[j][i] != field[j - 1][i]) {
                     res = false;
                     break;
                 }
             }
 
-            if (res && field[i][0] != Symbol.Empty) {
-                WasWin(field[i][0]);
-                isEnd = true;
-                return;
-            }
+            CheckResult(0, i, res);
+            if (isEnd) return;
         }
 
         res = true;
@@ -102,12 +94,9 @@ contract TicTacToe {
                 break;
             }
         }
-
-        if (res && field[0][0] != Symbol.Empty) {
-            WasWin(field[0][0]);
-            isEnd = true;
-            return;
-        }
+        
+        CheckResult(0, 0, res);
+        if (isEnd) return;
 
         res = true;
         for (j = 1; j < size; j++) {
@@ -117,8 +106,13 @@ contract TicTacToe {
             }
         }
 
-        if (res && field[size - 1][0] != Symbol.Empty) {
-            WasWin(field[size - 1][0]);
+        CheckResult(0, size - 1, res);
+        if (isEnd) return;
+    }
+    
+    function CheckResult(uint i, uint j, bool res) private {
+        if (res && field[i][j] != Symbol.Empty) {
+            WasWin(field[i][j]);
             isEnd = true;
         }
     }
