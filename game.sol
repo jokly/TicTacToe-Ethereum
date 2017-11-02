@@ -48,8 +48,8 @@ contract TicTacToe {
     }
     
     function SetSymbol(uint8 i, uint8 j, Symbol symbol) private {
-        require(i >= 0 && i <= 3);
-        require(j >= 0 && j <= 3);
+        require(i >= 0 && i < field.length);
+        require(j >= 0 && j < field.length);
         
         if (field[i][j] == Symbol.Empty) {
             field[i][j] = symbol;
