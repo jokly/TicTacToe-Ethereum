@@ -44,10 +44,8 @@ contract TicTacToe {
             
         if (msg.sender == player1.addr && stroke == player1.symbol) {
             SetSymbol(i, j, player1.symbol);
-            stroke = player2.symbol;
         } else if (msg.sender == player2.addr && stroke == player2.symbol) {
             SetSymbol(i, j, player2.symbol);
-            stroke = player1.symbol;
         }
     }
     
@@ -58,7 +56,7 @@ contract TicTacToe {
         if (field[i][j] == Symbol.Empty) {
             field[i][j] = symbol;
             FieldWasChanged();
-            
+            stroke = symbol == Symbol.X ? Symbol.O : Symbol.X;
             CheckWin();
         }    
     }
